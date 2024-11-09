@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homophonic Cipher Breaker</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <h1>Homophonic Substitution Cipher Breaker</h1>
+    <form id="cipherForm">
+        <label for="dataset">Choose Dataset:</label>
+        <select id="dataset" name="dataset">
+            <option value="datasets/dataset1.txt">Dataset 1</option>
+            <option value="datasets/dataset2.txt">Dataset 2</option>
+            <option value="datasets/dataset3.txt">Dataset 3</option>
+        </select>
+        <button type="submit">Break Cipher</button>
+    </form>
+    <div id="result">
+        <h2>Decrypted Text</h2>
+        <p id="plaintext"></p>
+    </div>
+    <script src="/static/js/script.js"></script>
+</body>
+</html>
