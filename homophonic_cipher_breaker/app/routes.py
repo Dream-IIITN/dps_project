@@ -23,6 +23,5 @@ def process_cipher():
     })
 
 def apply_key(ciphertext, key_map):
-    # Convert ciphertext using the key_map to derive plaintext
     plaintext = ''.join([key_map.get(char, char) for char in ciphertext])
     return plaintext
