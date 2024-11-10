@@ -4,23 +4,285 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homophonic Cipher Breaker</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            color: #21d621;
+            background-color: #000000;
+            margin: 0;
+            padding: 20px;
+            position: relative;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .cipher-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .matrix-character {
+            position: absolute;
+            color: #21d621;
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+            font-weight: bold;
+            animation: matrixFall linear infinite;
+            text-shadow: 0 0 8px #21d621;
+        }
+
+        @keyframes matrixFall {
+            0% {
+                transform: translateY(-100%);
+                opacity: 1;
+            }
+            95% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            color: #21d621;
+            margin-bottom: 30px;
+            z-index: 1;
+            text-shadow: 0 0 10px #21d621;
+        }
+
+        .content-container {
+            width: 80%;
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        form {
+            background-color: rgba(0, 0, 0, 0.9);
+            border: 2px solid #21d621;
+            border-radius: 12px;
+            padding: 40px;
+            width: 60%;
+            min-width: 500px;
+            box-shadow: 0 0 25px rgba(33, 214, 33, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 1;
+        }
+
+        label {
+            margin: 15px 0 8px;
+            font-weight: bold;
+            color: #21d621;
+            font-size: 1.1em;
+            width: 100%;
+        }
+
+        input[type="file"] {
+            border: 2px solid #21d621;
+            border-radius: 8px;
+            padding: 12px;
+            width: 100%;
+            margin-bottom: 20px;
+            font-size: 1em;
+            background-color: rgba(33, 214, 33, 0.1);
+            color: #21d621;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1em;
+            border: 2px solid #21d621;
+            border-radius: 8px;
+            color: #21d621;
+            background-color: rgba(33, 214, 33, 0.1);
+            appearance: none;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        select:focus {
+            border-color: #21d621;
+            outline: none;
+            box-shadow: 0 0 10px rgba(33, 214, 33, 0.2);
+        }
+
+        select option {
+            background-color: #000;
+            color: #21d621;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            color: #000;
+            background-color: #21d621;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #1ab81a;
+            box-shadow: 0 0 20px #21d621;
+            transform: translateY(-2px);
+        }
+
+        #result {
+            background-color: rgba(0, 0, 0, 0.9);
+            border: 2px solid #21d621;
+            border-radius: 12px;
+            padding: 30px;
+            width: 60%;
+            min-width: 500px;
+            margin-top: 30px;
+            text-align: left;
+            color: #21d621;
+            box-shadow: 0 0 25px rgba(33, 214, 33, 0.3);
+        }
+
+        #result h2 {
+            color: #21d621;
+            margin-top: 0;
+            text-align: center;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 5px rgba(33, 214, 33, 0.3);
+        }
+
+        .bottom-blocks-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 50px;
+            width: 80%;
+            max-width: 1000px;
+            padding: 20px;
+        }
+
+        .block {
+            flex: 1;
+            height: 200px;
+            background-color: rgba(0, 0, 0, 0.9);
+            border: 2px solid #21d621;
+            border-radius: 12px;
+            box-shadow: 0 0 25px rgba(33, 214, 33, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .block:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 35px rgba(33, 214, 33, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            form, #result {
+                width: 90%;
+                min-width: auto;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .bottom-blocks-container {
+                flex-direction: column;
+            }
+
+            .block {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Homophonic Substitution Cipher Breaker</h1>
-    <form id="cipherForm">
-        <label for="dataset">Choose Dataset:</label>
-        <select id="dataset" name="dataset">
-            <option value="datasets/dataset1.txt">Dataset 1</option>
-            <option value="datasets/dataset2.txt">Dataset 2</option>
-            <option value="datasets/dataset3.txt">Dataset 3</option>
-        </select>
-        <button type="submit">Break Cipher</button>
-    </form>
-    <div id="result">
-        <h2>Decrypted Text</h2>
-        <p id="plaintext"></p>
+    <div class="cipher-background" id="matrixBackground"></div>    
+    <div class="content-container">
+        <h1>Homophonic Substitution Cipher Breaker</h1>
+        <form id="cipherForm" method="post" action="/process_cipher">
+            <label for="fileUpload">Upload Cipher Text:</label>
+            <input type="file" id="fileUpload" name="cipherFile">
+
+            <label for="dataset">Choose Dataset:</label>
+            <select id="dataset" name="dataset">
+                <option value="" selected disabled>Select a dataset</option>
+                <option value="datasets/dataset1.txt">Dataset 1</option>
+                <option value="datasets/dataset2.txt">Dataset 2</option>
+                <option value="datasets/dataset3.txt">Dataset 3</option>
+            </select>
+
+            <button type="submit">Break Cipher</button>
+        </form>
+        <div id="result">
+            <h2>Decrypted Text</h2>
+            <p>Your decrypted text will appear here after processing...</p>
+        </div>
     </div>
-    <script src="/static/js/script.js"></script>
+
+    <div class="bottom-blocks-container">
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+    </div>
+
+    <script>
+        function createMatrixEffect() {
+            const background = document.getElementById('matrixBackground');
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789αβγδεζηθικλμνξοπρστυφχψω';
+            const columns = Math.floor(window.innerWidth / 20);
+
+            function createCharacter() {
+                const span = document.createElement('span');
+                span.className = 'matrix-character';
+                span.textContent = characters[Math.floor(Math.random() * characters.length)];
+                span.style.left = `${Math.floor(Math.random() * columns) * 20}px`;
+                span.style.animationDuration = `${Math.random() * 2 + 3}s`;
+                span.style.opacity = Math.random() * 0.5 + 0.5;
+                
+                span.addEventListener('animationend', () => {
+                    span.remove();
+                    createCharacter();
+                });
+                
+                background.appendChild(span);
+            }
+
+            for (let i = 0; i < columns; i++) {
+                setTimeout(() => {
+                    createCharacter();
+                }, Math.random() * 5000);
+            }
+        }
+
+        createMatrixEffect();
+
+        window.addEventListener('resize', () => {
+            const background = document.getElementById('matrixBackground');
+            background.innerHTML = '';
+            createMatrixEffect();
+        });
+    </script>
 </body>
 </html>
