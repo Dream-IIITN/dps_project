@@ -11,11 +11,8 @@
     <div class="content-container">
         <h1>Homophonic Substitution Cipher Breaker</h1>
         <form id="cipherForm" method="post" action="/process_cipher">
-            <!-- <label for="fileUpload">Upload Cipher Text:</label>
-            <input type="file" id="fileUpload" name="cipherFile"> -->
-
             <label for="approach">Choose Approach:</label>
-            <select id="approach" name="approach">
+            <select id="approach" name="approach" onchange="toggleCribsField()">
                 <option value="" selected disabled>Select</option>
                 <option value="Frequency analysis on substitution cipher">Frequency analysis on substitution cipher</option>
                 <option value="Frequency analysis + Bigram/Trigram analysis on substitution cipher">Frequency analysis + Bigram/Trigram analysis on substitution cipher</option>
@@ -23,6 +20,12 @@
                 <option value="Frequency analysis on homophonic substitution cipher">Frequency analysis on homophonic substitution cipher</option>
                 <option value="Hill climbing approach on homophonic substitution cipher">Hill climbing approach on homophonic substitution cipher</option>
             </select>
+
+            <!-- Cribs input field (Initially hidden) -->
+            <div id="cribsField" style="display:none;">
+                <label for="cribs">Enter Cribs (comma separated):</label>
+                <input type="text" id="cribs" name="cribs">
+            </div>
 
             <button type="submit">Break Cipher</button>
         </form>

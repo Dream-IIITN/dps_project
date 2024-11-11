@@ -33,3 +33,13 @@ window.addEventListener('resize', () => {
     background.innerHTML = '';
     createMatrixEffect();
 });
+
+function toggleCribsField() {
+    var approach = document.getElementById("approach").value;
+    var cribsField = document.getElementById("cribsField");
+    if (approach === "Frequency analysis + Cribbing on substitution cipher") {
+        cribsField.style.display = "block";
+    } else {
+        cribsField.style.display = "none";
+    }
+}
