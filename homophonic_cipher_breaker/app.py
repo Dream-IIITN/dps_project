@@ -2,6 +2,8 @@ from flask import Flask,render_template,request,jsonify
 from cipher_breaker import load_dataset, initial_key_setup, hill_climb,apply_key
 from utils.scorer import character_similarity_score
 from utils.substitution.solverFreqAnalysis import frequency_analysis,decrypt_with_guess
+from utils.substitution.solverCribbing import decrypt_with_cribs_and_frequency
+from utils.homophonic.solverHillClimb import hill_climb_attack
 app = Flask(__name__)
 
 @app.route('/')
@@ -25,6 +27,13 @@ def process_cipher():
     if approach=="Frequency analysis on substitution cipher":
         key=frequency_analysis(ciphertext)
         decipheredText=decrypt_with_guess(ciphertext, key)
+    elif approach=="Frequency analysis + Cribbing on substitution cipher":
+        cribs = ["the", "and", "data", "organizations","transformation"]
+        decipheredText, key = decrypt_with_cribs_and_frequency(ciphertext, cribs) 
+    elif approach=="Hill climbing approach on homophonic substitution cipher":
+        decipheredText, key = hill_climb_attack(HomoCipherText)
+    
+        
     
     score= character_similarity_score(origionaltext,decipheredText)
     formatted_key_mapping = {letter: ", ".join(symbols) for letter, symbols in key.items()}
