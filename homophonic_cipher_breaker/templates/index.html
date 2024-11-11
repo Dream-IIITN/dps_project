@@ -222,29 +222,37 @@
     <div class="content-container">
         <h1>Homophonic Substitution Cipher Breaker</h1>
         <form id="cipherForm" method="post" action="/process_cipher">
-            <label for="fileUpload">Upload Cipher Text:</label>
-            <input type="file" id="fileUpload" name="cipherFile">
+            <!-- <label for="fileUpload">Upload Cipher Text:</label>
+            <input type="file" id="fileUpload" name="cipherFile"> -->
 
             <label for="dataset">Choose Dataset:</label>
             <select id="dataset" name="dataset">
                 <option value="" selected disabled>Select a dataset</option>
-                <option value="datasets/dataset1.txt">Dataset 1</option>
-                <option value="datasets/dataset2.txt">Dataset 2</option>
-                <option value="datasets/dataset3.txt">Dataset 3</option>
+                <option value="datasets/dataset1.txt">Zodiac340</option>
+                <option value="datasets/dataset2.txt">Zodiac408</option>
+                <option value="datasets/dataset3.txt">Testing Cipher</option>
             </select>
 
             <button type="submit">Break Cipher</button>
         </form>
         <div id="result">
-            <h2>Decrypted Text</h2>
-            <p>Your decrypted text will appear here after processing...</p>
+            <h2>Zodiac Breaker</h2>
+            <p>Your decrypted text will appear  after processing...</p>
         </div>
     </div>
 
     <div class="bottom-blocks-container">
-        <div class="block"></div>
-        <div class="block"></div>
-        <div class="block"></div>
+        <!-- <div class="block">
+            <pre>The Zodiac 340 cipher consists of 
+                340 symbols arranged in a 20x17 grid.</pre>
+        </div> -->
+        <!-- <div class="block">
+            <pre>The Zodiac 408 cipher was one of the first ciphers created by the Zodiac killer and was successfully deciphered.</pre>
+            
+        </div> -->
+        <!-- <div class="block">
+            <pre>For testing purposes, let’s create a simpler homophonic cipher where letters are mapped to various symbols. This allows you to validate the cipher-breaking functionality on a dataset that’s less complex than the Zodiac ciphers.</pre>
+        </div> -->
     </div>
 
     <script>

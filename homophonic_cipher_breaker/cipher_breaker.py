@@ -50,7 +50,7 @@ def score_key(ciphertext, key_map):
     return score
 
 def hill_climb(ciphertext, key_map):
-    best_score = score_key(ciphertext, key_map)
+    best_score = abs(score_key(ciphertext, key_map))
     best_key = key_map.copy()
     improved = True
 

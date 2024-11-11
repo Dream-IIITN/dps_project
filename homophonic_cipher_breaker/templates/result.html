@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decryption Result</title>
+    <style>
+        /* General body styling */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            color: #21d621;
+            background-color: #000000;
+            margin: 0;
+            padding: 20px;
+            position: relative;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Matrix background effect */
+        .cipher-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .matrix-character {
+            position: absolute;
+            color: #21d621;
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+            font-weight: bold;
+            animation: matrixFall linear infinite;
+            text-shadow: 0 0 8px #21d621;
+        }
+
+        @keyframes matrixFall {
+            0% {
+                transform: translateY(-100%);
+                opacity: 1;
+            }
+            95% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+
+        /* Header styling */
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            color: #21d621;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px #21d621;
+            z-index: 1;
+        }
+
+        /* Result container styling */
+        .result-container {
+            background-color: rgba(0, 0, 0, 0.9);
+            border: 2px solid #21d621;
+            border-radius: 12px;
+            padding: 30px;
+            width: 60%;
+            min-width: 500px;
+            box-shadow: 0 0 25px rgba(33, 214, 33, 0.3);
+            color: #21d621;
+            z-index: 1;
+        }
+
+        /* Section styling */
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section label {
+            font-weight: bold;
+            color: #21d621;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .section p {
+            background-color: rgba(33, 214, 33, 0.1);
+            padding: 12px;
+            border: 2px solid #21d621;
+            border-radius: 8px;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            color: #21d621;
+            font-family: monospace;
+        }
+
+        /* Table styling for Key Mapping */
+        .key-mapping-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            color: #21d621;
+        }
+
+        .key-mapping-table th, .key-mapping-table td {
+            border: 1px solid #21d621;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .key-mapping-table th {
+            background-color: rgba(0, 0, 0, 0.9);
+            text-shadow: 0 0 5px #21d621;
+        }
+
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .result-container {
+                width: 90%;
+                min-width: auto;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+        }
+
+        /* Bottom blocks container (if needed) */
+        .bottom-blocks-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 50px;
+            width: 80%;
+            max-width: 1000px;
+            padding: 20px;
+        }
+
+        .block {
+            flex: 1;
+            height: 200px;
+            background-color: rgba(0, 0, 0, 0.9);
+            border: 2px solid #21d621;
+            border-radius: 12px;
+            box-shadow: 0 0 25px rgba(33, 214, 33, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .block:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 35px rgba(33, 214, 33, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <!-- Matrix Background -->
+    <div class="cipher-background" id="matrixBackground"></div>
+
+    <!-- Header -->
+    <h1>Decryption Result</h1>
+
+    <!-- Result Container -->
+    <div class="result-container">
+        <!-- Cipher Text Section -->
+        <div class="section">
+            <label>Cipher Text:</label>
+            <p>{{ cipher_text }}</p>
+        </div>
+
+        <!-- Decoded Message Section -->
+        <div class="section">
+            <label>Decoded Message:</label>
+            <p>{{ decoded_message }}</p>
+        </div>
+
+        <!-- Key Mapping Section -->
+        <div class="section">
+            <label>Key Mapping:</label>
+            <table class="key-mapping-table">
+                <tr>
+                    <th>Letter</th>
+                    <th>Symbols</th>
+                </tr>
+                {% for letter, symbols in key_mapping.items() %}
+                <tr>
+                    <td>{{ letter }}</td>
+                    <td>{{ symbols }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <!-- Score Section -->
+        <div class="section">
+            <label>Score:</label>
+            <p>{{ score }}</p>
+        </div>
+    </div>
+
+    <!-- Optional: Bottom Blocks Container -->
+    <!-- Uncomment the following section if you want to include additional blocks similar to index.html -->
+
+    <!--
+    <div class="bottom-blocks-container">
+        <div class="block">
+            <label>Cipher Text:</label>
+            <p>{{ cipher_text }}</p>
+        </div>
+        <div class="block">
+            <label>Decoded Message:</label>
+            <p>{{ decoded_message }}</p>
+        </div>
+        <div class="block">
+            <label>Score:</label>
+            <p>{{ score }}</p>
+        </div>
+    </div>
+    -->
+
+    <!-- Matrix Effect Script -->
+    <script>
+        function createMatrixEffect() {
+            const background = document.getElementById('matrixBackground');
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789αβγδεζηθικλμνξοπρστυφχψω';
+            const columns = Math.floor(window.innerWidth / 20);
+
+            function createCharacter() {
+                const span = document.createElement('span');
+                span.className = 'matrix-character';
+                span.textContent = characters[Math.floor(Math.random() * characters.length)];
+                span.style.left = `${Math.floor(Math.random() * columns) * 20}px`;
+                span.style.animationDuration = `${Math.random() * 2 + 3}s`;
+                span.style.opacity = Math.random() * 0.5 + 0.5;
+                
+                span.addEventListener('animationend', () => {
+                    span.remove();
+                    createCharacter();
+                });
+                
+                background.appendChild(span);
+            }
+
+            for (let i = 0; i < columns; i++) {
+                setTimeout(() => {
+                    createCharacter();
+                }, Math.random() * 5000);
+            }
+        }
+
+        createMatrixEffect();
+
+        window.addEventListener('resize', () => {
+            const background = document.getElementById('matrixBackground');
+            background.innerHTML = '';
+            createMatrixEffect();
+        });
+    </script>
+</body>
+</html>
